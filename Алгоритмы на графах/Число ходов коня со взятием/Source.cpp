@@ -4,15 +4,17 @@
 #include <vector>
 #include <fstream>
 #define int long long 
+#define cin in
+#define cout out
 using namespace std;
-ifstream in("input.txt");
-ofstream out("output.txt");
+ifstream in("in.txt");
+ofstream out("out.txt");
 int n, u, v, w;
 int inf = LLONG_MAX;
 vector<vector<pair<int, int>>> edges(n);
 vector<int> dijkstra(int n, int s, vector<vector<pair<int, int>>>& edges) {
-    vector<int> d(n, inf);
-    d[0] = 0;
+    vector<int> d(n, 10000);
+    d[s] = 0;
     set< pair<int, int> > q;
     q.insert(make_pair(0, s));
     while (!q.empty()) {
@@ -33,34 +35,44 @@ vector<int> dijkstra(int n, int s, vector<vector<pair<int, int>>>& edges) {
 int32_t main() {
     int  m, n;
     cin >> n >> m;
-    vector<vector<pair<int, int>>> edges(n);
-    for (size_t i = 0; i < n; i++) {
-        for (size_t j = 0; j < m; j++) {
+    vector<vector<pair<int, int>>> edges(n*m);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
             int x,w;
             cin >> x;
-            if (i == j) { continue; }
             if (x == -1) {
                 continue;
             }
             else {
-                if (x == 1) {
-                    w = 2;
-                }if (x == 0) {
-                    w = 1;
-                }
-                edges[i].push_back(make_pair(j, w));
+                if ((i - 2 >= 0) && (j - 1 >= 0)) { edges[(i - 2) * m + j - 1].push_back(make_pair(i * m + j, x + 1));}
+                if (i - 2 >= 0 && j +1 < m) { edges[(i - 2) * m + j + 1].push_back(make_pair(i * m + j, x + 1)); }
+
+                if (i - 1 >= 0 && j + 2 < m) { edges[(i - 1) * m + j + 2].push_back(make_pair(i * m + j, x + 1)); }
+                if (i +1 < n && j + 2 < m) { edges[(i +1) * m + j + 2].push_back(make_pair(i * m + j, x + 1)); }
+
+                if (i +2 < n && j + 1 <  m) { edges[(i +2) * m + j + 1].push_back(make_pair(i * m + j, x + 1)); }
+                if (i + 2 < n && j - 1 >=0) { edges[(i + 2) * m + j -1].push_back(make_pair(i * m + j, x + 1)); }
+
+
+                if (i + 1 < n && j -2 >=0) { edges[(i + 1) * m + j -2].push_back(make_pair(i * m + j, x + 1)); }
+                if (i -1 >= 0 && j - 2 >= 0) { edges[(i -1) * m + j - 2].push_back(make_pair(i * m + j, x + 1)); }
+
             }
         }
     }
-    vector<int> ans = dijkstra(n, 0, edges);
+  
     
     int x1, y1, x2, y2;
     cin >> x1 >> y1 >> x2 >> y2;
     
-    
-    for (int i : ans) {
+    vector<int> ans = dijkstra(n*m, (x1-1)*m+y1-1, edges);
+ /*   for (int i : ans) {
         cout << i << " ";
+    }*/
+    if (ans[(x2 - 1) * m + y2 - 1] == 10000) {
+        cout << "No";
     }
-
-    cout << ans[ans.size() - 1];
+    else {
+        cout << ans[(x2 - 1) * m + y2 - 1];
+    }
 }
