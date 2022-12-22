@@ -7,7 +7,7 @@ int main() {
     int n;
     cin >> n;
     vector <int > a(n);
-    //vector<int> findLIS(vector<int> a);
+    //vector<int> findLIS(vector<int> a );
     for (size_t i = 0; i < n; i++) {
         cin >> a[i];
     }
